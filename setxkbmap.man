@@ -1,5 +1,5 @@
 .\"
-.\" $XFree86$
+.\" $XFree86: xc/programs/setxkbmap/setxkbmap.man,v 3.7 2003/05/29 22:16:23 herrb Exp $
 .\"
 .TH SETXKBMAP 1 __xorgversion__
 .SH NAME
