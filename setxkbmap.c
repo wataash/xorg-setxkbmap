@@ -23,7 +23,7 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/programs/setxkbmap/setxkbmap.c,v 3.8 2003/11/17 22:20:50 dawes Exp $ */
+/* $XFree86$ */
 
 #include <stdio.h>
 #include <stdlib.h>
