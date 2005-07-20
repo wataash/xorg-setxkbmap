@@ -21,8 +21,8 @@
 
 bin_PROGRAMS = setxkbmap
 
-setxkbmap_CFLAGS = $(DEP_CFLAGS) -D__XKBDEFRULES__='"xorg"'
-setxkbmap_LDADD = $(DEP_LIBS)
+setxkbmap_CFLAGS = $(SETXKBMAP_CFLAGS) -D__XKBDEFRULES__='"xorg"'
+setxkbmap_LDADD = $(SETXKBMAP_LIBS)
 
 setxkbmap_SOURCES =	\
         setxkbmap.c
