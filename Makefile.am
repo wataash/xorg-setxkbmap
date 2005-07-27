@@ -27,6 +27,5 @@ setxkbmap_LDADD = $(SETXKBMAP_LIBS)
 setxkbmap_SOURCES =	\
         setxkbmap.c
 
-dist_man_MANS = \
+dist_man1_MANS = \
         setxkbmap.man
-
