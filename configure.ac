@@ -22,7 +22,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(setxkbmap,[7.0], [xorg@freedesktop.org],setxkbmap)
+AC_INIT(setxkbmap,[0.99.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],setxkbmap)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
@@ -35,5 +35,7 @@ AC_PROG_INSTALL
 PKG_CHECK_MODULES(SETXKBMAP, xkbfile x11)
 AC_SUBST(SETXKBMAP_CFLAGS)
 AC_SUBST(SETXKBMAP_LIBS)
+
+XORG_RELEASE_VERSION
 
 AC_OUTPUT([Makefile])
