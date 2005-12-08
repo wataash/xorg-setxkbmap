@@ -21,9 +21,11 @@
 
 bin_PROGRAMS = setxkbmap
 
+XKBCONFIGROOT=@XKBCONFIGROOT@
+
 setxkbmap_CFLAGS = $(SETXKBMAP_CFLAGS) \
 	-D__XKBDEFRULES__='"xorg"' \
-	-DDFLT_XKB_CONFIG_ROOT='"$(datadir)/X11/xkb"'
+	-DDFLT_XKB_CONFIG_ROOT=\"$(XKBCONFIGROOT)\"
 setxkbmap_LDADD = $(SETXKBMAP_LIBS)
 
 setxkbmap_SOURCES =	\

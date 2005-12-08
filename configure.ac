@@ -31,6 +31,13 @@ AM_CONFIG_HEADER(config.h)
 AC_PROG_CC
 AC_PROG_INSTALL
 
+AC_ARG_WITH(xkb-config-root,
+        AC_HELP_STRING([--with-xkb-config-root=<paths>],
+                       [Set default XKB config root (default: ${datadir}/X11/xkb)]),
+        [XKBCONFIGROOT="$withval"],
+        [XKBCONFIGROOT=${datadir}/X11/xkb])
+AC_SUBST([XKBCONFIGROOT])
+
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(SETXKBMAP, xkbfile x11)
 AC_SUBST(SETXKBMAP_CFLAGS)
