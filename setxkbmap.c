@@ -1,4 +1,4 @@
-/* $XdotOrg$ */
+/* $XdotOrg: app/setxkbmap/setxkbmap.c,v 1.2 2004/04/23 19:54:37 eich Exp $ */
 /************************************************************
  Copyright (c) 1996 by Silicon Graphics Computer Systems, Inc.
 
@@ -468,6 +468,8 @@ char *			tmp= NULL;
         tmp = DFLT_XKB_RULES_FILE;
         vd.model = DFLT_XKB_MODEL;
         vd.layout = DFLT_XKB_LAYOUT;
+        vd.variant = NULL;
+        vd.options = NULL;
         VMSG3(3,"Use defaults: rules - '%s' model - '%s' layout - '%s'\n",
                 tmp, vd.model, vd.layout);
     }
