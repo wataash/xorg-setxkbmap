@@ -47,7 +47,7 @@
 #endif
 
 #ifndef DFLT_XKB_CONFIG_ROOT
-#define	DFLT_XKB_CONFIG_ROOT "/usr/X11R6/lib/X11/xkb"
+#define	DFLT_XKB_CONFIG_ROOT "/usr/share/X11/xkb"
 #endif
 #ifndef DFLT_XKB_RULES_FILE
 #define	DFLT_XKB_RULES_FILE __XKBDEFRULES__
@@ -56,7 +56,7 @@
 #define	DFLT_XKB_LAYOUT "us"
 #endif
 #ifndef DFLT_XKB_MODEL
-#define	DFLT_XKB_MODEL "pc101"
+#define	DFLT_XKB_MODEL "pc105"
 #endif
 
 #define	UNDEFINED	0
