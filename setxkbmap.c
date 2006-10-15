@@ -118,6 +118,8 @@ char **			inclPath= NULL;
 
 XkbDescPtr		xkb= NULL;
 
+int                     deviceSpec = XkbUseCoreKbd;
+
 /***====================================================================***/
 
 #define	streq(s1,s2)	(strcmp(s1,s2)==0)
@@ -204,6 +206,7 @@ usage(int argc,char **argv)
     MSG("-?,-help            Print this message\n");
     MSG("-compat <name>      Specifies compatibility map component name\n");
     MSG("-config <file>      Specifies configuration file to use\n");
+    MSG("-device <deviceid>  Specifies the device ID to use\n");
     MSG("-display <dpy>      Specifies display to use\n");
     MSG("-geometry <name>    Specifies geometry component name\n");
     MSG("-I[<dir>]           Add <dir> to list of directories to be used\n");
@@ -334,6 +337,8 @@ unsigned	present;
 	    ok= setOptString(&i,argc,argv,COMPAT_NDX,FROM_CMD_LINE);
 	else if (streq(argv[i],"-config"))
 	    ok= setOptString(&i,argc,argv,CONFIG_NDX,FROM_CMD_LINE);
+        else if (streq(argv[i],"-device"))
+            deviceSpec= atoi(argv[++i]);
 	else if (streq(argv[i],"-display"))
 	    ok= setOptString(&i,argc,argv,DISPLAY_NDX,FROM_CMD_LINE);
 	else if (streq(argv[i],"-geometry"))
@@ -811,7 +816,7 @@ applyComponentNames(void)
 	cmdNames.keycodes= svValue[KEYCODES_NDX];
 	cmdNames.geometry= svValue[GEOMETRY_NDX];
 	cmdNames.keymap= svValue[KEYMAP_NDX];
-	xkb= XkbGetKeyboardByName(dpy,XkbUseCoreKbd,&cmdNames,
+	xkb= XkbGetKeyboardByName(dpy,deviceSpec,&cmdNames,
 			XkbGBN_AllComponentsMask, 
 			XkbGBN_AllComponentsMask&(~XkbGBN_GeometryMask),
 			True);
