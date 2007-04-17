@@ -48,6 +48,7 @@ XORGRELSTRING = @PACKAGE_STRING@
   XORGMANNAME = X Version 11
 
 MAN_SUBSTS = \
+	-e 's|__xkbconfigroot__|"$(XKBCONFIGROOT)"|' \
 	-e 's|__vendorversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
 	-e 's|__xorgversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
 	-e 's|__xservername__|Xorg|g' \

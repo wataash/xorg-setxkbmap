@@ -23,7 +23,7 @@ specified on the command line.
 .P
 An XKB keymap is constructed from a number of components which are compiled
 only as needed.  The source for all of the components can be found in
-.IR __projectroot__/lib/X11/xkb .
+.IR __xkbconfigroot__ .
 .SH OPTIONS
 .TP 8
 .B \-help
@@ -117,4 +117,4 @@ the server.
 keyboards(1)
 ..
 .SH FILES
-.I __projectroot__/lib/X11/xkb
+.I __xkbconfigroot__
