@@ -70,3 +70,11 @@ SUFFIXES = .$(APP_MAN_SUFFIX) .man
 
 .man.$(APP_MAN_SUFFIX):
 	sed $(MAN_SUBSTS) < $< > $@
+
+if LINT
+ALL_LINT_FLAGS=$(LINT_FLAGS) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+		$(AM_CPPFLAGS) $(CPPFLAGS) $(setxkbmap_CFLAGS)
+
+lint:
+	$(LINT) $(ALL_LINT_FLAGS) $(setxkbmap_SOURCES)
+endif LINT
