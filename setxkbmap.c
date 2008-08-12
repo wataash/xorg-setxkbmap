@@ -1,4 +1,3 @@
-/* $XdotOrg: app/setxkbmap/setxkbmap.c,v 1.2 2004/04/23 19:54:37 eich Exp $ */
 /************************************************************
  Copyright (c) 1996 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/programs/setxkbmap/setxkbmap.c,v 3.7 2003/01/20 04:15:08 dawes Exp $ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -846,11 +844,11 @@ main(int argc,char **argv)
     if (dpy)
         getServerValues();
     if (svValue[CONFIG_NDX] && (!applyConfig(svValue[CONFIG_NDX])))
-	exit(-3);
+        exit(-3);
     if (!applyRules())
-	exit(-4);
+        exit(-4);
     if (!applyComponentNames())
-	exit(-5);
+        exit(-5);
     if (dpy)
 	XCloseDisplay(dpy);
     exit(0);
