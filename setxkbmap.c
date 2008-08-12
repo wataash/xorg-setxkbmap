@@ -57,17 +57,21 @@
 #define	DFLT_XKB_MODEL "pc105"
 #endif
 
+/* Values used in svSrc to state how a value was obtained. The order of these
+ * is important, the bigger the higher the priority.
+ * e.g. FROM_CONFIG overrides FROM_SERVER */
 #define	UNDEFINED	0
-#define	FROM_SERVER	1
-#define	FROM_RULES	2
-#define	FROM_CONFIG	3
-#define	FROM_CMD_LINE	4
+#define	FROM_SERVER	1       /* retrieved from server at runtime */
+#define	FROM_RULES	2       /* xkb rules file */
+#define	FROM_CONFIG	3       /* command-line specified config file */
+#define	FROM_CMD_LINE	4       /* specified at the cmdline */
 #define	NUM_SOURCES	5
 
-#define	RULES_NDX	0
-#define	CONFIG_NDX	1
-#define	DISPLAY_NDX	2
-#define	LOCALE_NDX	3
+/* Indices used into svSrc, svNValue */
+#define	RULES_NDX	0       /* rules file */
+#define	CONFIG_NDX	1       /* config file (if used) */
+#define	DISPLAY_NDX	2       /* X display name */
+#define	LOCALE_NDX	3       /* machine's locale */
 #define	MODEL_NDX	4
 #define	LAYOUT_NDX	5
 #define	VARIANT_NDX	6
@@ -86,17 +90,33 @@ int verbose = 5;
 
 Display *dpy;
 
+/**
+ * human-readable versions of FROM_CONFIG, FROM_SERVER, etc. Used for error
+ * reporting.
+ */
 char *srcName[NUM_SOURCES] = {
     "undefined", "X server", "rules file", "config file", "command line"
 };
 
+/**
+ * human-readable versions for RULES_NDX, CONFIG_NDX, etc. Used for error
+ * reporting.
+ */
 char *svName[NUM_STRING_VALS] = {
     "rules file", "config file", "X display", "locale",
     "keyboard model", "keyboard layout", "layout variant",
     "keycodes", "types", "compatibility map", "symbols", "geometry",
     "keymap"
 };
+/**
+ * Holds the source for each of RULES, CONFIG, DISPLAY, etc.
+ * i.e. if svSrc[LAYOUT_NDX] == FROM_SERVER, then the layout has been fetched
+ * from the server.
+ */
 int svSrc[NUM_STRING_VALS];
+/**
+ * Holds the value for each of RULES, CONFIG, DISPLAY, etc.
+ */
 char *svValue[NUM_STRING_VALS];
 
 XkbConfigRtrnRec cfgResult;
@@ -267,6 +287,13 @@ dumpNames(Bool wantRules, Bool wantCNames)
 
 /***====================================================================***/
 
+/**
+ * Set the given string (obtained from src) in the svValue/svSrc globals.
+ * If the given item is already set, it is overridden if the original source
+ * is less significant than the given one.
+ *
+ * @param which What value is it (one of RULES_NDX, CONFIG_NDX, ...)
+ */
 void
 trySetString(int which, char *newVal, int src)
 {
@@ -333,6 +360,11 @@ setOptString(int *arg, int argc, char **argv, int which, int src)
 
 /***====================================================================***/
 
+/**
+ * Parse commandline arguments.
+ * Return True on success or False if an unrecognized option has been
+ * specified.
+ */
 int
 parseArgs(int argc, char **argv)
 {
@@ -347,6 +379,8 @@ parseArgs(int argc, char **argv)
     {
         if (argv[i][0] != '-')
         {
+            /* Allow a call like "setxkbmap us" to work. Layout is default,
+               if -layout is given, then try parsing variant, then options */
             if (!svSrc[LAYOUT_NDX])
                 trySetString(LAYOUT_NDX, argv[i], FROM_CMD_LINE);
             else if (!svSrc[VARIANT_NDX])
@@ -359,7 +393,7 @@ parseArgs(int argc, char **argv)
         else if (streq(argv[i], "-config"))
             ok = setOptString(&i, argc, argv, CONFIG_NDX, FROM_CMD_LINE);
         else if (streq(argv[i], "-device"))
-            deviceSpec = atoi(argv[++i]);
+            deviceSpec = atoi(argv[++i]); /* only allow device IDs, not names */
         else if (streq(argv[i], "-display"))
             ok = setOptString(&i, argc, argv, DISPLAY_NDX, FROM_CMD_LINE);
         else if (streq(argv[i], "-geometry"))
@@ -458,6 +492,11 @@ parseArgs(int argc, char **argv)
     return ok;
 }
 
+/**
+ * Open a connection to the display and print error if it fails.
+ *
+ * @return True on success or False otherwise.
+ */
 Bool
 getDisplay(int argc, char **argv)
 {
@@ -507,6 +546,13 @@ getDisplay(int argc, char **argv)
 
 /***====================================================================***/
 
+/**
+ * Retrieve xkb values from th the XKB_RULES_NAMES property and store their
+ * contents in svValues.
+ * If the property cannot be read, the built-in defaults are used.
+ *
+ * @return True.
+ */
 Bool
 getServerValues(void)
 {
@@ -724,6 +770,12 @@ applyConfig(char *name)
     return True;
 }
 
+/**
+ * If any of model, layout, variant or options is specified, then compile the
+ * options into the
+ *
+ * @return True on success or false otherwise.
+ */
 Bool
 applyRules(void)
 {
@@ -757,6 +809,8 @@ applyRules(void)
         }
         else
         {
+            /* try to load rules files from all include paths until the first
+             * we succeed with */
             for (i = 0; (i < numInclPath) && (!rules); i++)
             {
                 if ((strlen(inclPath[i]) + strlen(rfName) + 8) > PATH_MAX)
@@ -774,6 +828,8 @@ applyRules(void)
             ERR1("Couldn't find rules file (%s) \n", svValue[RULES_NDX]);
             return False;
         }
+        /* Let the rules file to the magic, then update the svValues with
+         * those returned after processing the rules */
         XkbRF_GetComponents(rules, &rdefs, &rnames);
         if (rnames.keycodes)
         {
@@ -910,6 +966,7 @@ applyComponentNames(void)
         MSG("Trying to build keymap using the following components:\n");
         dumpNames(False, True);
     }
+    /* Upload the new description to the server. */
     if (dpy && !print)
     {
         XkbComponentNamesRec cmdNames;
@@ -928,6 +985,7 @@ applyComponentNames(void)
             ERR("Error loading new keyboard description\n");
             return False;
         }
+        /* update the XKB root property */
         if (svValue[RULES_NDX] && (rdefs.model || rdefs.layout))
         {
             if (!XkbRF_SetNamesProp(dpy, svValue[RULES_NDX], &rdefs))
