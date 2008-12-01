@@ -666,11 +666,21 @@ stringFromOptions(char *orig, int numNew, char **newOpts)
     if (orig)
     {
         orig = (char *) realloc(orig, len);
+        if (!orig)
+        {
+            ERR("OOM in stringFromOptions\n");
+            return NULL;
+        }
         nOut = 1;
     }
     else
     {
         orig = (char *) calloc(len, 1);
+        if (!orig)
+        {
+            ERR("OOM in stringFromOptions\n");
+            return NULL;
+        }
         nOut = 0;
     }
     for (i = 0; i < numNew; i++)
