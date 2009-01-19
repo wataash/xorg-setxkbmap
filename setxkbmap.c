@@ -84,17 +84,17 @@
 #define	NUM_STRING_VALS	13
 
 /***====================================================================***/
-Bool print = False;
-Bool synch = False;
-int verbose = 5;
+static Bool print = False;
+static Bool synch = False;
+static int verbose = 5;
 
-Display *dpy;
+static Display *dpy;
 
 /**
  * human-readable versions of FROM_CONFIG, FROM_SERVER, etc. Used for error
  * reporting.
  */
-char *srcName[NUM_SOURCES] = {
+static char *srcName[NUM_SOURCES] = {
     "undefined", "X server", "rules file", "config file", "command line"
 };
 
@@ -102,7 +102,7 @@ char *srcName[NUM_SOURCES] = {
  * human-readable versions for RULES_NDX, CONFIG_NDX, etc. Used for error
  * reporting.
  */
-char *svName[NUM_STRING_VALS] = {
+static char *svName[NUM_STRING_VALS] = {
     "rules file", "config file", "X display", "locale",
     "keyboard model", "keyboard layout", "layout variant",
     "keycodes", "types", "compatibility map", "symbols", "geometry",
@@ -113,29 +113,29 @@ char *svName[NUM_STRING_VALS] = {
  * i.e. if svSrc[LAYOUT_NDX] == FROM_SERVER, then the layout has been fetched
  * from the server.
  */
-int svSrc[NUM_STRING_VALS];
+static int svSrc[NUM_STRING_VALS];
 /**
  * Holds the value for each of RULES, CONFIG, DISPLAY, etc.
  */
-char *svValue[NUM_STRING_VALS];
+static char *svValue[NUM_STRING_VALS];
 
-XkbConfigRtrnRec cfgResult;
+static XkbConfigRtrnRec cfgResult;
 
-XkbRF_RulesPtr rules = NULL;
-XkbRF_VarDefsRec rdefs;
+static XkbRF_RulesPtr rules = NULL;
+static XkbRF_VarDefsRec rdefs;
 
-Bool clearOptions = False;
-int szOptions = 0;
-int numOptions = 0;
-char **options = NULL;
+static Bool clearOptions = False;
+static int szOptions = 0;
+static int numOptions = 0;
+static char **options = NULL;
 
-int szInclPath = 0;
-int numInclPath = 0;
-char **inclPath = NULL;
+static int szInclPath = 0;
+static int numInclPath = 0;
+static char **inclPath = NULL;
 
-XkbDescPtr xkb = NULL;
+static XkbDescPtr xkb = NULL;
 
-int deviceSpec = XkbUseCoreKbd;
+static int deviceSpec = XkbUseCoreKbd;
 
 /***====================================================================***/
 
@@ -886,7 +886,7 @@ applyRules(void)
 
 /* Primitive sanity check - filter out 'map names' (inside parenthesis) */
 /* that can confuse xkbcomp parser */
-Bool
+static Bool
 checkName(char *name, char *string)
 {
     char *i = name, *opar = NULL;
