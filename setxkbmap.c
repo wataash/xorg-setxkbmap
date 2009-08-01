@@ -547,7 +547,7 @@ getDisplay(int argc, char **argv)
 /***====================================================================***/
 
 /**
- * Retrieve xkb values from th the XKB_RULES_NAMES property and store their
+ * Retrieve xkb values from the XKB_RULES_NAMES property and store their
  * contents in svValues.
  * If the property cannot be read, the built-in defaults are used.
  *
