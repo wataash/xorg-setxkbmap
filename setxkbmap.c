@@ -48,7 +48,7 @@
 #define	DFLT_XKB_CONFIG_ROOT "/usr/share/X11/xkb"
 #endif
 #ifndef DFLT_XKB_RULES_FILE
-#define	DFLT_XKB_RULES_FILE __XKBDEFRULES__
+#define	DFLT_XKB_RULES_FILE "base"
 #endif
 #ifndef DFLT_XKB_LAYOUT
 #define	DFLT_XKB_LAYOUT "us"
