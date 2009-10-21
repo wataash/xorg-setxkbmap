@@ -23,7 +23,7 @@ dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
 AC_INIT(setxkbmap,[1.1.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],setxkbmap)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
 # Require xorg-macros 1.3 or later: XORG_DEFAULT_OPTIONS
