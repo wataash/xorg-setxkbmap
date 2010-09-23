@@ -44,8 +44,6 @@ AC_SUBST([XKBCONFIGROOT])
 
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(SETXKBMAP, xkbfile x11)
-AC_SUBST(SETXKBMAP_CFLAGS)
-AC_SUBST(SETXKBMAP_LIBS)
 
 # Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
