@@ -39,7 +39,7 @@ AM_CONFIG_HEADER(config.h)
 XORG_DEFAULT_OPTIONS
 
 AC_ARG_WITH(xkb-config-root,
-        AC_HELP_STRING([--with-xkb-config-root=<paths>],
+        AS_HELP_STRING([--with-xkb-config-root=<paths>],
                        [Set default XKB config root (default: ${datadir}/X11/xkb)]),
         [XKBCONFIGROOT="$withval"],
         [XKBCONFIGROOT=${datadir}/X11/xkb])
