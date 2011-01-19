@@ -397,7 +397,14 @@ parseArgs(int argc, char **argv)
         else if (streq(argv[i], "-config"))
             ok = setOptString(&i, argc, argv, CONFIG_NDX, FROM_CMD_LINE);
         else if (streq(argv[i], "-device"))
-            deviceSpec = atoi(argv[++i]); /* only allow device IDs, not names */
+        {
+            if ( ++i < argc ) {
+                deviceSpec = atoi(argv[i]); /* only allow device IDs, not names */
+            } else {
+                usage(argc, argv);
+                exit(-1);
+            }
+        }
         else if (streq(argv[i], "-display"))
             ok = setOptString(&i, argc, argv, DISPLAY_NDX, FROM_CMD_LINE);
         else if (streq(argv[i], "-geometry"))
