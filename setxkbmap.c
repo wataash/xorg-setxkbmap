@@ -414,7 +414,15 @@ parseArgs(int argc, char **argv)
             usage(argc, argv);
             exit(0);
         }
-        else if (strpfx(argv[i], "-I"))
+        else if (streq(argv[i], "-I")) /* space between -I and path */
+        {
+            if ( ++i < argc )
+                ok = addToList(&szInclPath, &numInclPath, &inclPath, argv[i]);
+            else
+                VMSG(0, "No directory specified on the command line\n"
+                     "Trailing -I option ignored\n");
+        }
+        else if (strpfx(argv[i], "-I")) /* no space between -I and path */
             ok = addToList(&szInclPath, &numInclPath, &inclPath, &argv[i][2]);
         else if (streq(argv[i], "-keycodes"))
             ok = setOptString(&i, argc, argv, KEYCODES_NDX, FROM_CMD_LINE);
