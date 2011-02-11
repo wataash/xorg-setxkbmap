@@ -850,13 +850,13 @@ applyRules(void)
                           inclPath[i], rfName);
                     continue;
                 }
-                sprintf(buf, "%s/rules/%s", inclPath[i], svValue[RULES_NDX]);
+                sprintf(buf, "%s/rules/%s", inclPath[i], rfName);
                 rules = XkbRF_Load(buf, svValue[LOCALE_NDX], True, True);
             }
         }
         if (!rules)
         {
-            ERR1("Couldn't find rules file (%s) \n", svValue[RULES_NDX]);
+            ERR1("Couldn't find rules file (%s) \n", rfName);
             return False;
         }
         /* Let the rules file to the magic, then update the svValues with
@@ -894,7 +894,7 @@ applyRules(void)
         }
         if (verbose > 6)
         {
-            MSG1("Applied rules from %s:\n", svValue[RULES_NDX]);
+            MSG1("Applied rules from %s:\n", rfName);
             dumpNames(True, False);
         }
     }
