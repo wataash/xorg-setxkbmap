@@ -651,7 +651,7 @@ addStringToOptions(char *opt_str, int *sz_opts, int *num_opts, char ***opts)
 
     if ((str = strdup(opt_str)) == NULL)
         return False;
-    for (tmp = str, next = NULL; (tmp && *tmp != '\0') && ok; tmp = next)
+    for (tmp = str; (tmp && *tmp != '\0') && ok; tmp = next)
     {
         next = strchr(str, ',');
         if (next)
