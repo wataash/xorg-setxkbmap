@@ -625,14 +625,13 @@ findFileInPath(char *name, char *subdir)
     }
     for (i = 0; (i < numInclPath); i++)
     {
-        if ((strlen(inclPath[i]) + strlen(subdir) + strlen(name) + 2) >
+        if (snprintf(buf, PATH_MAX, "%s/%s%s", inclPath[i], subdir, name) >=
             PATH_MAX)
         {
             VMSG3(0, "Path too long (%s/%s%s). Ignored.\n", inclPath[i],
                   subdir, name);
             continue;
         }
-        sprintf(buf, "%s/%s%s", inclPath[i], subdir, name);
         fp = fopen(name, "r");
         if ((verbose > 7) || ((!fp) && (verbose > 5)))
             MSG2("%s file %s\n", (fp ? "Found" : "Didn't find"), buf);
@@ -844,13 +843,13 @@ applyRules(void)
              * we succeed with */
             for (i = 0; (i < numInclPath) && (!rules); i++)
             {
-                if ((strlen(inclPath[i]) + strlen(rfName) + 8) > PATH_MAX)
+                if (snprintf(buf, PATH_MAX, "%s/rules/%s",
+                             inclPath[i], rfName) >= PATH_MAX)
                 {
                     VMSG2(0, "Path too long (%s/rules/%s). Ignored.\n",
                           inclPath[i], rfName);
                     continue;
                 }
-                sprintf(buf, "%s/rules/%s", inclPath[i], rfName);
                 rules = XkbRF_Load(buf, svValue[LOCALE_NDX], True, True);
             }
         }
