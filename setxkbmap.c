@@ -131,13 +131,18 @@ static XkbRF_RulesPtr rules = NULL;
 static XkbRF_VarDefsRec rdefs;
 
 static Bool clearOptions = False;
-static int szOptions = 0;
-static int numOptions = 0;
-static char **options = NULL;
 
-static int szInclPath = 0;
-static int numInclPath = 0;
-static char **inclPath = NULL;
+struct list {
+	char ** item;	/* Array of items. */
+	int     sz;     /* Size of array. */
+	int     num;    /* Number of used elements. */
+};
+
+typedef struct list list_t;
+
+static list_t options = { NULL, 0, 0 };
+
+static list_t inclPath = { NULL, 0, 0 };
 
 static XkbDescPtr xkb = NULL;
 
@@ -165,7 +170,7 @@ static int deviceSpec = XkbUseCoreKbd;
 
 /***====================================================================***/
 
-Bool addToList(int *sz, int *num, char ***listIn, char *newVal);
+Bool addToList(list_t * list, char *newVal);
 void usage(int argc, char **argv);
 void dumpNames(Bool wantRules, Bool wantCNames);
 void trySetString(setting_t * setting, char *newVal, int src);
@@ -174,9 +179,8 @@ int parseArgs(int argc, char **argv);
 Bool getDisplay(int argc, char **argv);
 Bool getServerValues(void);
 FILE *findFileInPath(char *name, char *subdir);
-Bool addStringToOptions(char *opt_str, int *sz_opts, int *num_opts,
-                        char ***opts);
-char *stringFromOptions(char *orig, int numNew, char **newOpts);
+Bool addStringToOptions(char *opt_str, list_t * opts);
+char *stringFromOptions(char *orig, list_t * newOpts);
 Bool applyConfig(char *name);
 Bool applyRules(void);
 Bool applyComponentNames(void);
@@ -184,44 +188,45 @@ void printKeymap(void);
 
 /***====================================================================***/
 
+/*
+    If newVal is NULL or empty string, the list is cleared.
+    Otherwise newVal is added to the end of the list (if it is not present in the list yet).
+*/
+
 Bool
-addToList(int *sz, int *num, char ***listIn, char *newVal)
+addToList(list_t * list, char *newVal)
 {
     register int i;
-    char **list;
 
     if ((!newVal) || (!newVal[0]))
     {
-        *num = 0;
+        list->num = 0;
         return True;
     }
-    list = *listIn;
-    for (i = 0; i < *num; i++)
+    for (i = 0; i < list->num; i++)
     {
-        if (streq(list[i], newVal))
+        if (streq(list->item[i], newVal))
             return True;
     }
-    if ((list == NULL) || (*sz < 1))
+    if ((list->item == NULL) || (list->sz < 1))
     {
-        *num = 0;
-        *sz = 4;
-        list = (char **) calloc(*sz, sizeof(char *));
-        *listIn = list;
+        list->num = 0;
+        list->sz = 4;
+        list->item = (char **) calloc(list->sz, sizeof(char *));
     }
-    else if (*num >= *sz)
+    else if (list->num >= list->sz)
     {
-        *sz *= 2;
-        list = (char **) realloc(list, (*sz) * sizeof(char *));
-        *listIn = list;
+        list->sz *= 2;
+        list->item = (char **) realloc(list->item, (list->sz) * sizeof(char *));
     }
-    if (!list)
+    if (!list->item)
     {
         ERR("Internal Error! Allocation failure in add to list!\n");
         ERR("                Exiting.\n");
         exit(-1);
     }
-    list[*num] = strdup(newVal);
-    (*num) = (*num) + 1;
+    list->item[list->num] = strdup(newVal);
+    list->num += 1;
     return True;
 }
 
@@ -269,9 +274,9 @@ dumpNames(Bool wantRules, Bool wantCNames)
             MSG1("layout:     %s\n", settings.layout.value);
         if (settings.variant.value)
             MSG1("variant:    %s\n", settings.variant.value);
-        if (options)
+        if (options.item)
         {
-            char *opt_str = stringFromOptions(NULL, numOptions, options);
+            char *opt_str = stringFromOptions(NULL, &options);
             MSG1("options:    %s\n", opt_str);
             free(opt_str);
         }
@@ -382,8 +387,8 @@ parseArgs(int argc, char **argv)
     unsigned present;
 
     ok = True;
-    addToList(&szInclPath, &numInclPath, &inclPath, ".");
-    addToList(&szInclPath, &numInclPath, &inclPath, DFLT_XKB_CONFIG_ROOT);
+    addToList(&inclPath, ".");
+    addToList(&inclPath, DFLT_XKB_CONFIG_ROOT);
     for (i = 1; (i < argc) && ok; i++)
     {
         if (argv[i][0] != '-')
@@ -395,7 +400,7 @@ parseArgs(int argc, char **argv)
             else if (!settings.variant.src)
                 trySetString(&settings.variant, argv[i], FROM_CMD_LINE);
             else
-                ok = addToList(&szOptions, &numOptions, &options, argv[i]);
+                ok = addToList(&options, argv[i]);
         }
         else if (streq(argv[i], "-compat"))
             ok = setOptString(&i, argc, argv, &settings.compat, FROM_CMD_LINE);
@@ -422,13 +427,13 @@ parseArgs(int argc, char **argv)
         else if (streq(argv[i], "-I")) /* space between -I and path */
         {
             if ( ++i < argc )
-                ok = addToList(&szInclPath, &numInclPath, &inclPath, argv[i]);
+                ok = addToList(&inclPath, argv[i]);
             else
                 VMSG(0, "No directory specified on the command line\n"
                      "Trailing -I option ignored\n");
         }
         else if (strpfx(argv[i], "-I")) /* no space between -I and path */
-            ok = addToList(&szInclPath, &numInclPath, &inclPath, &argv[i][2]);
+            ok = addToList(&inclPath, &argv[i][2]);
         else if (streq(argv[i], "-keycodes"))
             ok = setOptString(&i, argc, argv, &settings.keycodes, FROM_CMD_LINE);
         else if (streq(argv[i], "-keymap"))
@@ -443,13 +448,13 @@ parseArgs(int argc, char **argv)
                 || (argv[i + 1][0] == '-'))
             {
                 clearOptions = True;
-                ok = addToList(&szOptions, &numOptions, &options, "");
+                ok = addToList(&options, "");
                 if (i < argc - 1 && argv[i + 1][0] == '\0')
                     i++;
             }
             else
             {
-                ok = addToList(&szOptions, &numOptions, &options, argv[++i]);
+                ok = addToList(&options, argv[++i]);
             }
         }
         else if (streq(argv[i], "-print"))
@@ -606,7 +611,7 @@ getServerValues(void)
         trySetString(&settings.variant, vd.variant, FROM_SERVER);
     if ((vd.options) && (!clearOptions))
     {
-        addStringToOptions(vd.options, &szOptions, &numOptions, &options);
+        addStringToOptions(vd.options, &options);
         XFree(vd.options);
     }
     return True;
@@ -628,12 +633,12 @@ findFileInPath(char *name, char *subdir)
             MSG2("%s file %s\n", (fp ? "Found" : "Didn't find"), name);
         return fp;
     }
-    for (i = 0; (i < numInclPath); i++)
+    for (i = 0; (i < inclPath.num); i++)
     {
-        if (snprintf(buf, PATH_MAX, "%s/%s%s", inclPath[i], subdir, name) >=
+        if (snprintf(buf, PATH_MAX, "%s/%s%s", inclPath.item[i], subdir, name) >=
             PATH_MAX)
         {
-            VMSG3(0, "Path too long (%s/%s%s). Ignored.\n", inclPath[i],
+            VMSG3(0, "Path too long (%s/%s%s). Ignored.\n", inclPath.item[i],
                   subdir, name);
             continue;
         }
@@ -649,7 +654,7 @@ findFileInPath(char *name, char *subdir)
 /***====================================================================***/
 
 Bool
-addStringToOptions(char *opt_str, int *sz_opts, int *num_opts, char ***opts)
+addStringToOptions(char *opt_str, list_t * opts)
 {
     char *tmp, *str, *next;
     Bool ok = True;
@@ -664,7 +669,7 @@ addStringToOptions(char *opt_str, int *sz_opts, int *num_opts, char ***opts)
             *next = '\0';
             next++;
         }
-        ok = addToList(sz_opts, num_opts, opts, tmp) && ok;
+        ok = addToList(opts, tmp) && ok;
     }
     free(str);
     return ok;
@@ -673,7 +678,7 @@ addStringToOptions(char *opt_str, int *sz_opts, int *num_opts, char ***opts)
 /***====================================================================***/
 
 char *
-stringFromOptions(char *orig, int numNew, char **newOpts)
+stringFromOptions(char *orig, list_t * newOpts)
 {
     int len, i, nOut;
 
@@ -681,10 +686,10 @@ stringFromOptions(char *orig, int numNew, char **newOpts)
         len = strlen(orig) + 1;
     else
         len = 0;
-    for (i = 0; i < numNew; i++)
+    for (i = 0; i < newOpts->num; i++)
     {
-        if (newOpts[i])
-            len += strlen(newOpts[i]) + 1;
+        if (newOpts->item[i])
+            len += strlen(newOpts->item[i]) + 1;
     }
     if (len < 1)
         return NULL;
@@ -708,17 +713,17 @@ stringFromOptions(char *orig, int numNew, char **newOpts)
         }
         nOut = 0;
     }
-    for (i = 0; i < numNew; i++)
+    for (i = 0; i < newOpts->num; i++)
     {
-        if (!newOpts[i])
+        if (!newOpts->item[i])
             continue;
         if (nOut > 0)
         {
             strcat(orig, ",");
-            strcat(orig, newOpts[i]);
+            strcat(orig, newOpts->item[i]);
         }
         else
-            strcpy(orig, newOpts[i]);
+            strcpy(orig, newOpts->item[i]);
         nOut++;
     }
     return orig;
@@ -763,8 +768,7 @@ applyConfig(char *name)
     }
     if (cfgResult.options)
     {
-        addStringToOptions(cfgResult.options, &szOptions, &numOptions,
-                           &options);
+        addStringToOptions(cfgResult.options, &options);
         cfgResult.options = NULL;
     }
     if (cfgResult.keymap)
@@ -818,7 +822,7 @@ applyRules(void)
     char *rfName;
 
     if (settings.model.src || settings.layout.src || settings.variant.src
-        || options)
+        || options.item)
     {
         char buf[PATH_MAX];
         XkbComponentNamesRec rnames;
@@ -829,9 +833,9 @@ applyRules(void)
         rdefs.model = settings.model.value;
         rdefs.layout = settings.layout.value;
         rdefs.variant = settings.variant.value;
-        if (options)
+        if (options.item)
             rdefs.options =
-                stringFromOptions(rdefs.options, numOptions, options);
+                stringFromOptions(rdefs.options, &options);
 
         if (settings.rules.src)
             rfName = settings.rules.value;
@@ -846,13 +850,13 @@ applyRules(void)
         {
             /* try to load rules files from all include paths until the first
              * we succeed with */
-            for (i = 0; (i < numInclPath) && (!rules); i++)
+            for (i = 0; (i < inclPath.num) && (!rules); i++)
             {
                 if (snprintf(buf, PATH_MAX, "%s/rules/%s",
-                             inclPath[i], rfName) >= PATH_MAX)
+                             inclPath.item[i], rfName) >= PATH_MAX)
                 {
                     VMSG2(0, "Path too long (%s/rules/%s). Ignored.\n",
-                          inclPath[i], rfName);
+                          inclPath.item[i], rfName);
                     continue;
                 }
                 rules = XkbRF_Load(buf, settings.locale.value, True, True);
