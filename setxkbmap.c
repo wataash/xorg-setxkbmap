@@ -6,19 +6,19 @@
  fee is hereby granted, provided that the above copyright
  notice appear in all copies and that both that copyright
  notice and this permission notice appear in supporting
- documentation, and that the name of Silicon Graphics not be 
- used in advertising or publicity pertaining to distribution 
+ documentation, and that the name of Silicon Graphics not be
+ used in advertising or publicity pertaining to distribution
  of the software without specific prior written permission.
- Silicon Graphics makes no representation about the suitability 
+ Silicon Graphics makes no representation about the suitability
  of this software for any purpose. It is provided "as is"
  without any express or implied warranty.
- 
- SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
- SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+
+ SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
  AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
- GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
- DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
- DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+ GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+ DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+ DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
  OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -45,43 +45,43 @@
 #endif
 
 #ifndef DFLT_XKB_CONFIG_ROOT
-#define	DFLT_XKB_CONFIG_ROOT "/usr/share/X11/xkb"
+#define DFLT_XKB_CONFIG_ROOT "/usr/share/X11/xkb"
 #endif
 #ifndef DFLT_XKB_RULES_FILE
-#define	DFLT_XKB_RULES_FILE "base"
+#define DFLT_XKB_RULES_FILE "base"
 #endif
 #ifndef DFLT_XKB_LAYOUT
-#define	DFLT_XKB_LAYOUT "us"
+#define DFLT_XKB_LAYOUT "us"
 #endif
 #ifndef DFLT_XKB_MODEL
-#define	DFLT_XKB_MODEL "pc105"
+#define DFLT_XKB_MODEL "pc105"
 #endif
 
 /* Values used in svSrc to state how a value was obtained. The order of these
  * is important, the bigger the higher the priority.
  * e.g. FROM_CONFIG overrides FROM_SERVER */
-#define	UNDEFINED	0
-#define	FROM_SERVER	1       /* retrieved from server at runtime */
-#define	FROM_RULES	2       /* xkb rules file */
-#define	FROM_CONFIG	3       /* command-line specified config file */
-#define	FROM_CMD_LINE	4       /* specified at the cmdline */
-#define	NUM_SOURCES	5
+#define UNDEFINED       0
+#define FROM_SERVER     1       /* retrieved from server at runtime */
+#define FROM_RULES      2       /* xkb rules file */
+#define FROM_CONFIG     3       /* command-line specified config file */
+#define FROM_CMD_LINE   4       /* specified at the cmdline */
+#define NUM_SOURCES     5
 
 /* Indices used into svSrc, svNValue */
-#define	RULES_NDX	0       /* rules file */
-#define	CONFIG_NDX	1       /* config file (if used) */
-#define	DISPLAY_NDX	2       /* X display name */
-#define	LOCALE_NDX	3       /* machine's locale */
-#define	MODEL_NDX	4
-#define	LAYOUT_NDX	5
-#define	VARIANT_NDX	6
-#define KEYCODES_NDX	7
-#define	TYPES_NDX	8
-#define	COMPAT_NDX	9
-#define	SYMBOLS_NDX	10
-#define	GEOMETRY_NDX	11
-#define	KEYMAP_NDX	12
-#define	NUM_STRING_VALS	13
+#define RULES_NDX       0       /* rules file */
+#define CONFIG_NDX      1       /* config file (if used) */
+#define DISPLAY_NDX     2       /* X display name */
+#define LOCALE_NDX      3       /* machine's locale */
+#define MODEL_NDX       4
+#define LAYOUT_NDX      5
+#define VARIANT_NDX     6
+#define KEYCODES_NDX    7
+#define TYPES_NDX       8
+#define COMPAT_NDX      9
+#define SYMBOLS_NDX     10
+#define GEOMETRY_NDX    11
+#define KEYMAP_NDX      12
+#define NUM_STRING_VALS 13
 
 /***====================================================================***/
 static Bool print = False;
@@ -140,23 +140,23 @@ static int deviceSpec = XkbUseCoreKbd;
 
 /***====================================================================***/
 
-#define	streq(s1,s2)	(strcmp(s1,s2)==0)
-#define	strpfx(s1,s2)	(strncmp(s1,s2,strlen(s2))==0)
+#define streq(s1,s2)    (strcmp(s1,s2)==0)
+#define strpfx(s1,s2)   (strncmp(s1,s2,strlen(s2))==0)
 
-#define	MSG(s)		printf(s)
-#define	MSG1(s,a)	printf(s,a)
-#define	MSG2(s,a,b)	printf(s,a,b)
-#define	MSG3(s,a,b,c)	printf(s,a,b,c)
+#define MSG(s)          printf(s)
+#define MSG1(s,a)       printf(s,a)
+#define MSG2(s,a,b)     printf(s,a,b)
+#define MSG3(s,a,b,c)   printf(s,a,b,c)
 
-#define	VMSG(l,s)	if (verbose>(l)) printf(s)
-#define	VMSG1(l,s,a)	if (verbose>(l)) printf(s,a)
-#define	VMSG2(l,s,a,b)	if (verbose>(l)) printf(s,a,b)
-#define	VMSG3(l,s,a,b,c) if (verbose>(l)) printf(s,a,b,c)
+#define VMSG(l,s)        if (verbose>(l)) printf(s)
+#define VMSG1(l,s,a)     if (verbose>(l)) printf(s,a)
+#define VMSG2(l,s,a,b)   if (verbose>(l)) printf(s,a,b)
+#define VMSG3(l,s,a,b,c) if (verbose>(l)) printf(s,a,b,c)
 
-#define	ERR(s)		fprintf(stderr,s)
-#define	ERR1(s,a)	fprintf(stderr,s,a)
-#define	ERR2(s,a,b)	fprintf(stderr,s,a,b)
-#define	ERR3(s,a,b,c)	fprintf(stderr,s,a,b,c)
+#define ERR(s)          fprintf(stderr,s)
+#define ERR1(s,a)       fprintf(stderr,s,a)
+#define ERR2(s,a,b)     fprintf(stderr,s,a,b)
+#define ERR3(s,a,b,c)   fprintf(stderr,s,a,b,c)
 
 /***====================================================================***/
 
@@ -1030,7 +1030,7 @@ applyComponentNames(void)
     }
     if (query)
     {
-	dumpNames(True, False);
+        dumpNames(True, False);
     }
     return True;
 }
