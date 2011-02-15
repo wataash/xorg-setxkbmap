@@ -642,7 +642,7 @@ findFileInPath(char *name, char *subdir)
                   subdir, name);
             continue;
         }
-        fp = fopen(name, "r");
+        fp = fopen(buf, "r");
         if ((verbose > 7) || ((!fp) && (verbose > 5)))
             MSG2("%s file %s\n", (fp ? "Found" : "Didn't find"), buf);
         if (fp != NULL)
