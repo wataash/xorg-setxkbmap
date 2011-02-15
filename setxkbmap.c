@@ -235,30 +235,32 @@ addToList(list_t * list, char *newVal)
 void
 usage(int argc, char **argv)
 {
-    MSG1("Usage: %s [args] [<layout> [<variant> [<option> ... ]]]\n",
-         argv[0]);
-    MSG("Where legal args are:\n");
-    MSG("-?,-help            Print this message\n");
-    MSG("-compat <name>      Specifies compatibility map component name\n");
-    MSG("-config <file>      Specifies configuration file to use\n");
-    MSG("-device <deviceid>  Specifies the device ID to use\n");
-    MSG("-display <dpy>      Specifies display to use\n");
-    MSG("-geometry <name>    Specifies geometry component name\n");
-    MSG("-I[<dir>]           Add <dir> to list of directories to be used\n");
-    MSG("-keycodes <name>    Specifies keycodes component name\n");
-    MSG("-keymap <name>      Specifies name of keymap to load\n");
-    MSG("-layout <name>      Specifies layout used to choose component names\n");
-    MSG("-model <name>       Specifies model used to choose component names\n");
-    MSG("-option <name>      Adds an option used to choose component names\n");
-    MSG("-print              Print a complete xkb_keymap description and exit\n");
-    MSG("-query              Print the current layout settings and exit\n");
-    MSG("-rules <name>       Name of rules file to use\n");
-    MSG("-symbols <name>     Specifies symbols component name\n");
-    MSG("-synch              Synchronize request w/X server\n");
-    MSG("-types <name>       Specifies types component name\n");
-    MSG("-v[erbose] [<lvl>]  Sets verbosity (1..10).  Higher values yield\n");
-    MSG("                    more messages\n");
-    MSG("-variant <name>     Specifies layout variant used to choose component names\n");
+    MSG1(
+        "Usage: %s [args] [<layout> [<variant> [<option> ... ]]]\n"
+        "Where legal args are:\n"
+        "-?, -help           Print this message\n"
+        "-compat <name>      Specifies compatibility map component name\n"
+        "-config <file>      Specifies configuration file to use\n"
+        "-device <deviceid>  Specifies the device ID to use\n"
+        "-display <dpy>      Specifies display to use\n"
+        "-geometry <name>    Specifies geometry component name\n"
+        "-I<dir>             Add <dir> to list of directories to be used\n"
+        "-keycodes <name>    Specifies keycodes component name\n"
+        "-keymap <name>      Specifies name of keymap to load\n"
+        "-layout <name>      Specifies layout used to choose component names\n"
+        "-model <name>       Specifies model used to choose component names\n"
+        "-option <name>      Adds an option used to choose component names\n"
+        "-print              Print a complete xkb_keymap description and exit\n"
+        "-query              Print the current layout settings and exit\n"
+        "-rules <name>       Name of rules file to use\n"
+        "-symbols <name>     Specifies symbols component name\n"
+        "-synch              Synchronize request w/X server\n"
+        "-types <name>       Specifies types component name\n"
+        "-v[erbose] [<lvl>]  Sets verbosity (1..10).  Higher values yield\n"
+        "                    more messages\n"
+        "-variant <name>     Specifies layout variant used to choose component names\n",
+        argv[0]
+    );
 }
 
 void
