@@ -86,8 +86,8 @@ static char *srcName[NUM_SOURCES] = {
 };
 
 struct setting {
-    char const * name;  /* Human-readable setting name. Used for error reporting. */
-    char *       value; /* Holds the value. */
+    char const  *name;  /* Human-readable setting name. Used for error reporting. */
+    char        *value; /* Holds the value. */
     enum source  src;   /* Holds the source. */
 };
 
@@ -135,9 +135,9 @@ static XkbRF_VarDefsRec rdefs;
 static Bool clearOptions = False;
 
 struct list {
-	char ** item;	/* Array of items. */
-	int     sz;     /* Size of array. */
-	int     num;    /* Number of used elements. */
+    char  **item;   /* Array of items. */
+    int     sz;     /* Size of array. */
+    int     num;    /* Number of used elements. */
 };
 
 typedef struct list list_t;
@@ -172,17 +172,17 @@ static int deviceSpec = XkbUseCoreKbd;
 
 /***====================================================================***/
 
-Bool addToList(list_t * list, char *newVal);
+Bool addToList(list_t *list, char *newVal);
 void usage(int argc, char **argv);
 void dumpNames(Bool wantRules, Bool wantCNames);
 void trySetString(setting_t * setting, char *newVal, enum source src);
-Bool setOptString(int *arg, int argc, char **argv, setting_t * setting, enum source src);
+Bool setOptString(int *arg, int argc, char **argv, setting_t *setting, enum source src);
 int parseArgs(int argc, char **argv);
 Bool getDisplay(int argc, char **argv);
 Bool getServerValues(void);
 FILE *findFileInPath(char *name, char *subdir);
-Bool addStringToOptions(char *opt_str, list_t * opts);
-char *stringFromOptions(char *orig, list_t * newOpts);
+Bool addStringToOptions(char *opt_str, list_t *opts);
+char *stringFromOptions(char *orig, list_t *newOpts);
 Bool applyConfig(char *name);
 Bool applyRules(void);
 Bool applyComponentNames(void);
@@ -196,7 +196,7 @@ void printKeymap(void);
 */
 
 Bool
-addToList(list_t * list, char *newVal)
+addToList(list_t *list, char *newVal)
 {
     register int i;
 
@@ -313,7 +313,7 @@ dumpNames(Bool wantRules, Bool wantCNames)
  * @param which What value is it (one of RULES_NDX, CONFIG_NDX, ...)
  */
 void
-trySetString(setting_t * setting, char *newVal, enum source src)
+trySetString(setting_t *setting, char *newVal, enum source src)
 {
     if (setting->value != NULL)
     {
@@ -339,7 +339,7 @@ trySetString(setting_t * setting, char *newVal, enum source src)
 }
 
 Bool
-setOptString(int *arg, int argc, char **argv, setting_t * setting, enum source src)
+setOptString(int *arg, int argc, char **argv, setting_t *setting, enum source src)
 {
     int ndx;
     char *opt;
@@ -658,7 +658,7 @@ findFileInPath(char *name, char *subdir)
 /***====================================================================***/
 
 Bool
-addStringToOptions(char *opt_str, list_t * opts)
+addStringToOptions(char *opt_str, list_t *opts)
 {
     char *tmp, *str, *next;
     Bool ok = True;
@@ -682,7 +682,7 @@ addStringToOptions(char *opt_str, list_t * opts)
 /***====================================================================***/
 
 char *
-stringFromOptions(char *orig, list_t * newOpts)
+stringFromOptions(char *orig, list_t *newOpts)
 {
     int len, i, nOut;
 
