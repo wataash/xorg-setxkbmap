@@ -57,15 +57,17 @@
 #define DFLT_XKB_MODEL "pc105"
 #endif
 
-/* Values used in svSrc to state how a value was obtained. The order of these
+/* Constants to state how a value was obtained. The order of these
  * is important, the bigger the higher the priority.
  * e.g. FROM_CONFIG overrides FROM_SERVER */
-#define UNDEFINED       0
-#define FROM_SERVER     1       /* retrieved from server at runtime */
-#define FROM_RULES      2       /* xkb rules file */
-#define FROM_CONFIG     3       /* command-line specified config file */
-#define FROM_CMD_LINE   4       /* specified at the cmdline */
-#define NUM_SOURCES     5
+enum source {
+    UNDEFINED = 0,
+    FROM_SERVER,          /* Retrieved from server at runtime. */
+    FROM_RULES,           /* Xkb rules file. */
+    FROM_CONFIG,          /* Command-line specified config file. */
+    FROM_CMD_LINE,        /* Specified at the cmdline. */
+    NUM_SOURCES
+};
 
 /***====================================================================***/
 static Bool print = False;
@@ -86,7 +88,7 @@ static char *srcName[NUM_SOURCES] = {
 struct setting {
     char const * name;  /* Human-readable setting name. Used for error reporting. */
     char *       value; /* Holds the value. */
-    int          src;   /* Holds the source. */
+    enum source  src;   /* Holds the source. */
 };
 
 typedef struct setting setting_t;
@@ -173,8 +175,8 @@ static int deviceSpec = XkbUseCoreKbd;
 Bool addToList(list_t * list, char *newVal);
 void usage(int argc, char **argv);
 void dumpNames(Bool wantRules, Bool wantCNames);
-void trySetString(setting_t * setting, char *newVal, int src);
-Bool setOptString(int *arg, int argc, char **argv, setting_t * setting, int src);
+void trySetString(setting_t * setting, char *newVal, enum source src);
+Bool setOptString(int *arg, int argc, char **argv, setting_t * setting, enum source src);
 int parseArgs(int argc, char **argv);
 Bool getDisplay(int argc, char **argv);
 Bool getServerValues(void);
@@ -311,7 +313,7 @@ dumpNames(Bool wantRules, Bool wantCNames)
  * @param which What value is it (one of RULES_NDX, CONFIG_NDX, ...)
  */
 void
-trySetString(setting_t * setting, char *newVal, int src)
+trySetString(setting_t * setting, char *newVal, enum source src)
 {
     if (setting->value != NULL)
     {
@@ -337,7 +339,7 @@ trySetString(setting_t * setting, char *newVal, int src)
 }
 
 Bool
-setOptString(int *arg, int argc, char **argv, setting_t * setting, int src)
+setOptString(int *arg, int argc, char **argv, setting_t * setting, enum source src)
 {
     int ndx;
     char *opt;
