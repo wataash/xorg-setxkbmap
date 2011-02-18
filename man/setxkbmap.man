@@ -61,8 +61,8 @@ a keyboard layout.
 .TP 8
 .B \-layout \fIname\fP
 Specifies the name of the layout used to determine the components which
-make up the keyboard description.  Only one layout may be specified on
-the command line.
+make up the keyboard description. The \fI-layout\fP option may only be used
+once. Multiple layouts can be specified as a comma-separated list.
 .TP 8
 .B \-model \fIname\fP
 Specifies the name of the keyboard model used to determine the components
@@ -106,8 +106,10 @@ a keyboard layout.
 .TP 8
 .B \-variant \fIname\fP
 Specifies which variant of the keyboard layout should be used to determine
-the components which make up the keyboard description.  Only one variant
-may be specified on the command line.
+the components which make up the keyboard description. The \fI-variant\fP
+option may only be used once. Multiple variants can be specified as a
+comma-separated list and will be matched with the layouts specified with
+\fI-layout\fP.
 .TP 8
 .B \-verbose|\-v [\fIlevel\fP]
 Specifies level of verbosity in output messages.  Valid levels range from
