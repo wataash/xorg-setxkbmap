@@ -170,6 +170,8 @@ static int deviceSpec = XkbUseCoreKbd;
 #define ERR2(s,a,b)     fprintf(stderr,s,a,b)
 #define ERR3(s,a,b,c)   fprintf(stderr,s,a,b,c)
 
+#define OOM(ptr)        do { if ((ptr) == NULL) { ERR("Out of memory.\n"); exit(-1); } } while (0)
+
 /***====================================================================***/
 
 Bool addToList(list_t *list, char *newVal);
@@ -215,19 +217,16 @@ addToList(list_t *list, char *newVal)
         list->num = 0;
         list->sz = 4;
         list->item = (char **) calloc(list->sz, sizeof(char *));
+        OOM(list->item);
     }
     else if (list->num >= list->sz)
     {
         list->sz *= 2;
         list->item = (char **) realloc(list->item, (list->sz) * sizeof(char *));
-    }
-    if (!list->item)
-    {
-        ERR("Internal Error! Allocation failure in add to list!\n");
-        ERR("                Exiting.\n");
-        exit(-1);
+        OOM(list->item);
     }
     list->item[list->num] = strdup(newVal);
+    OOM(list->item[list->num]);
     list->num += 1;
     return True;
 }
@@ -663,8 +662,8 @@ addStringToOptions(char *opt_str, list_t *opts)
     char *tmp, *str, *next;
     Bool ok = True;
 
-    if ((str = strdup(opt_str)) == NULL)
-        return False;
+    str = strdup(opt_str);
+    OOM(str);
     for (tmp = str; (tmp && *tmp != '\0') && ok; tmp = next)
     {
         next = strchr(str, ',');
@@ -700,21 +699,13 @@ stringFromOptions(char *orig, list_t *newOpts)
     if (orig)
     {
         orig = (char *) realloc(orig, len);
-        if (!orig)
-        {
-            ERR("OOM in stringFromOptions\n");
-            return NULL;
-        }
+        OOM(orig);
         nOut = 1;
     }
     else
     {
         orig = (char *) calloc(len, 1);
-        if (!orig)
-        {
-            ERR("OOM in stringFromOptions\n");
-            return NULL;
-        }
+        OOM(orig);
         nOut = 0;
     }
     for (i = 0; i < newOpts->num; i++)
