@@ -180,7 +180,7 @@ Bool setOptString(int *arg, int argc, char **argv, setting_t *setting, enum sour
 int parseArgs(int argc, char **argv);
 Bool getDisplay(int argc, char **argv);
 Bool getServerValues(void);
-FILE *findFileInPath(char *name, char *subdir);
+FILE *findFileInPath(char *name);
 Bool addStringToOptions(char *opt_str, list_t *opts);
 char *stringFromOptions(char *orig, list_t *newOpts);
 Bool applyConfig(char *name);
@@ -624,7 +624,7 @@ getServerValues(void)
 /***====================================================================***/
 
 FILE *
-findFileInPath(char *name, char *subdir)
+findFileInPath(char *name)
 {
     register int i;
     char buf[PATH_MAX];
@@ -639,11 +639,11 @@ findFileInPath(char *name, char *subdir)
     }
     for (i = 0; (i < inclPath.num); i++)
     {
-        if (snprintf(buf, PATH_MAX, "%s/%s%s", inclPath.item[i], subdir, name) >=
+        if (snprintf(buf, PATH_MAX, "%s/%s", inclPath.item[i], name) >=
             PATH_MAX)
         {
-            VMSG3(0, "Path too long (%s/%s%s). Ignored.\n", inclPath.item[i],
-                  subdir, name);
+            VMSG2(0, "Path too long (%s/%s). Ignored.\n", inclPath.item[i],
+                  name);
             continue;
         }
         fp = fopen(buf, "r");
@@ -741,7 +741,7 @@ applyConfig(char *name)
     FILE *fp;
     Bool ok;
 
-    if ((fp = findFileInPath(name, "")) == NULL)
+    if ((fp = findFileInPath(name)) == NULL)
         return False;
     ok = XkbCFParse(fp, XkbCFDflts, NULL, &cfgResult);
     fclose(fp);
