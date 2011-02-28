@@ -186,6 +186,7 @@ FILE *findFileInPath(char *name);
 Bool addStringToOptions(char *opt_str, list_t *opts);
 char *stringFromOptions(char *orig, list_t *newOpts);
 Bool applyConfig(char *name);
+XkbRF_RulesPtr tryLoadRules(char *name, char *locale, Bool wantDesc, Bool wantRules);
 Bool applyRules(void);
 Bool applyComponentNames(void);
 void printKeymap(void);
@@ -804,6 +805,19 @@ applyConfig(char *name)
     return True;
 }
 
+XkbRF_RulesPtr
+tryLoadRules(char *name, char *locale, Bool wantDesc, Bool wantRules)
+{
+    XkbRF_RulesPtr rules = NULL;
+    VMSG1(7, "Trying to load rules file %s...\n", name);
+    rules = XkbRF_Load(name, locale, wantDesc, wantRules);
+    if (rules)
+    {
+        VMSG(7, "Success.\n");
+    }
+    return rules;
+}
+
 /**
  * If any of model, layout, variant or options is specified, then compile the
  * options into the
@@ -839,7 +853,7 @@ applyRules(void)
 
         if (rfName[0] == '/')
         {
-            rules = XkbRF_Load(rfName, settings.locale.value, True, True);
+            rules = tryLoadRules(rfName, settings.locale.value, True, True);
         }
         else
         {
@@ -854,7 +868,7 @@ applyRules(void)
                           inclPath.item[i], rfName);
                     continue;
                 }
-                rules = XkbRF_Load(buf, settings.locale.value, True, True);
+                rules = tryLoadRules(buf, settings.locale.value, True, True);
             }
         }
         if (!rules)
