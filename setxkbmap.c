@@ -81,7 +81,7 @@ static Display *dpy;
  * human-readable versions of FROM_CONFIG, FROM_SERVER, etc. Used for error
  * reporting.
  */
-static char *srcName[NUM_SOURCES] = {
+static const char *srcName[NUM_SOURCES] = {
     "undefined", "X server", "rules file", "config file", "command line"
 };
 
@@ -174,7 +174,7 @@ static int deviceSpec = XkbUseCoreKbd;
 
 /***====================================================================***/
 
-Bool addToList(list_t *list, char *newVal);
+Bool addToList(list_t *list, const char *newVal);
 void usage(int argc, char **argv);
 void dumpNames(Bool wantRules, Bool wantCNames);
 void trySetString(setting_t * setting, char *newVal, enum source src);
@@ -199,7 +199,7 @@ void printKeymap(void);
 */
 
 Bool
-addToList(list_t *list, char *newVal)
+addToList(list_t *list, const char *newVal)
 {
     register int i;
 
@@ -925,7 +925,7 @@ applyRules(void)
 /* Primitive sanity check - filter out 'map names' (inside parenthesis) */
 /* that can confuse xkbcomp parser */
 static Bool
-checkName(char *name, char *string)
+checkName(char *name, const char *string)
 {
     char *i = name, *opar = NULL;
     Bool ret = True;
