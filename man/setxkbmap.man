@@ -136,6 +136,6 @@ directly to the \fBxkbcomp\fP input. For example, the command
 makes both steps run on the same (client) machine and loads a keyboard map into
 the server.
 .SH SEE ALSO
-xkbcomp(__appmansuffix__)
+xkbcomp(__appmansuffix__), xkeyboard-config(__miscmansuffix__)
 .SH FILES
 .I __xkbconfigroot__
