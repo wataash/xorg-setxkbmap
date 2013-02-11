@@ -683,7 +683,8 @@ addStringToOptions(char *opt_str, list_t *opts)
 char *
 stringFromOptions(char *orig, list_t *newOpts)
 {
-    int len, i, nOut;
+    size_t len;
+    int i, nOut;
 
     if (orig)
         len = strlen(orig) + 1;
