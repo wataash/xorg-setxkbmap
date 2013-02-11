@@ -1018,13 +1018,15 @@ applyComponentNames(void)
     /* Upload the new description to the server. */
     if (dpy && !print && !query)
     {
-        XkbComponentNamesRec cmdNames;
-        cmdNames.types = settings.types.value;
-        cmdNames.compat = settings.compat.value;
-        cmdNames.symbols = settings.symbols.value;
-        cmdNames.keycodes = settings.keycodes.value;
-        cmdNames.geometry = settings.geometry.value;
-        cmdNames.keymap = settings.keymap.value;
+        XkbComponentNamesRec cmdNames = {
+            .keymap = settings.keymap.value,
+            .keycodes = settings.keycodes.value,
+            .types = settings.types.value,
+            .compat = settings.compat.value,
+            .symbols = settings.symbols.value,
+            .geometry = settings.geometry.value
+        };
+
         xkb = XkbGetKeyboardByName(dpy, deviceSpec, &cmdNames,
                                    XkbGBN_AllComponentsMask,
                                    XkbGBN_AllComponentsMask &
