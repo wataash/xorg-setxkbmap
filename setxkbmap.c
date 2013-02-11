@@ -129,7 +129,6 @@ static settings_t settings = {
 
 static XkbConfigRtrnRec cfgResult;
 
-static XkbRF_RulesPtr rules = NULL;
 static XkbRF_VarDefsRec rdefs;
 
 static Bool clearOptions = False;
@@ -829,6 +828,7 @@ applyRules(void)
 {
     int i;
     char *rfName;
+    XkbRF_RulesPtr rules = NULL;
 
     if (settings.model.src || settings.layout.src || settings.variant.src
         || options.item)
