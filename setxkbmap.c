@@ -245,7 +245,7 @@ usage(int argc, char **argv)
         "  -device <deviceid>  Specifies the device ID to use\n"
         "  -display <dpy>      Specifies display to use\n"
         "  -geometry <name>    Specifies geometry component name\n"
-        "  -I<dir>             Add <dir> to list of directories to be used\n"
+        "  -I <dir>            Add <dir> to list of directories to be used\n"
         "  -keycodes <name>    Specifies keycodes component name\n"
         "  -keymap <name>      Specifies name of keymap to load\n"
         "  -layout <name>      Specifies layout used to choose component names\n"
