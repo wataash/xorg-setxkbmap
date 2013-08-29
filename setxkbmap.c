@@ -24,6 +24,9 @@
 
  ********************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -257,8 +260,8 @@ usage(int argc, char **argv)
         "  -symbols <name>     Specifies symbols component name\n"
         "  -synch              Synchronize request with X server\n"
         "  -types <name>       Specifies types component name\n"
-        "  -v[erbose] [<lvl>]  Sets verbosity (1..10).  Higher values yield\n"
-        "                      more messages\n"
+        "  -v[erbose] [<lvl>]  Sets verbosity (1..10); higher values yield more messages\n"
+        "  -version            Print the program's version number\n"
         "  -variant <name>     Specifies layout variant used to choose component names\n",
         argv[0]
     );
@@ -472,6 +475,11 @@ parseArgs(int argc, char **argv)
             synch = True;
         else if (streq(argv[i], "-types"))
             ok = setOptString(&i, argc, argv, &settings.types, FROM_CMD_LINE);
+        else if (streq(argv[i], "-version"))
+        {
+            MSG1("setxkbmap %s\n", PACKAGE_VERSION);
+            exit(0);
+        }
         else if (streq(argv[i], "-verbose") || (streq(argv[i], "-v")))
         {
             if ((i < argc - 1) && (isdigit(argv[i + 1][0])))
