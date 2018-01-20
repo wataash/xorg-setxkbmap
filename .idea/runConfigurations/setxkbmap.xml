@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="setxkbmap" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xorg-setxkbmap" TARGET_NAME="setxkbmap" CONFIG_NAME="Debug" RUN_PATH="$PROJECT_DIR$/build/setxkbmap">
+    <envs />
+    <method />
+  </configuration>
+</component>
